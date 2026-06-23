@@ -51,7 +51,7 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto
 .gate-body{padding:28px 24px;}
 .gate-btn-creator{width:100%;padding:16px;background:var(--olive);color:#fff;border:none;border-radius:var(--radius-md);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;transition:opacity 0.2s;}
 .gate-btn-creator:active{opacity:0.85;}
-.gate-btn-admin{width:100%;padding:14px;background:#fff;color:var(--brand);border:1.5px solid #ddd;border-radius:var(--radius-md);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
+.gate-btn-admin{width:100%;padding:14px;background:#fff;color:var(--brand);border:1.5px solid #ddd;border-radius:var(--radius-md);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
 .gate-btn-admin:hover{border-color:var(--brand);background:var(--brand-light);}
 .admin-login-box{margin-top:16px;background:#f9f9f9;border-radius:var(--radius-md);padding:16px;border:1px solid #eee;}
 .admin-login-box label{font-size:12px;color:#666;font-weight:600;display:block;margin-bottom:8px;}
@@ -187,6 +187,7 @@ select.field-input{cursor:pointer;}
 .booking-result .br-actions{margin-top:14px;display:flex;gap:8px;}
 .change-countdown{font-size:11px;color:#C96D28;font-weight:600;margin-top:10px;padding:8px;background:#FFF3E6;border-radius:var(--radius-sm);text-align:center;}
 .change-expired{font-size:11px;color:#aaa;margin-top:10px;padding:8px;background:#f5f5f5;border-radius:var(--radius-sm);text-align:center;}
+.change-locked{font-size:11px;color:#A32D2D;font-weight:600;margin-top:10px;padding:8px;background:var(--c-full-bg);border-radius:var(--radius-sm);text-align:center;line-height:1.6;}
 
 /* ── 관리자 탭 ── */
 .admin-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
@@ -201,6 +202,18 @@ select.field-input{cursor:pointer;}
 .btn-add{background:var(--brand);color:#fff;}
 .btn-csv{background:#6B7C45;color:#fff;}
 .btn-notify{background:#FF6B35;color:#fff;}
+
+/* ── 예약 로그 탭 ── */
+.log-row{display:flex;gap:10px;padding:10px 4px;border-bottom:1px solid #f0f0f0;font-size:12px;align-items:flex-start;}
+.log-row:last-child{border-bottom:none;}
+.log-ts{flex:0 0 auto;color:#aaa;font-variant-numeric:tabular-nums;font-size:11px;padding-top:2px;white-space:nowrap;}
+.log-body{flex:1;line-height:1.6;color:#444;}
+.log-badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;margin-right:5px;}
+.log-badge-create{background:var(--c-avail-bg);color:var(--c-avail-tx);}
+.log-badge-change{background:var(--c-crowd-bg);color:var(--c-crowd-tx);}
+.log-badge-cancel{background:var(--c-full-bg);color:var(--c-full-tx);}
+.log-actor{color:#999;font-size:11px;margin-right:4px;}
+.log-msg{color:#444;}
 
 /* ── 날짜 차단 제어 ── */
 .block-ctrl-section{background:#f9f9f9;border:1px solid #eee;border-radius:var(--radius-md);padding:16px;margin-bottom:20px;}
@@ -262,11 +275,17 @@ select.field-input{cursor:pointer;}
 .modal-btns{display:flex;gap:8px;margin-top:16px;}
 .mbtn{flex:1;padding:12px 6px;font-size:13px;border-radius:var(--radius-sm);cursor:pointer;font-weight:700;border:none;text-align:center;white-space:nowrap;transition:opacity 0.2s;}
 .mbtn:active{opacity:0.8;}
+.mbtn:disabled{opacity:0.4;cursor:not-allowed;}
 .mbtn-cancel{background:#f0f0f0;color:#555;}
 .mbtn-edit{background:var(--c-crowd-tx);color:#fff;}
 .mbtn-danger{background:var(--c-full-tx);color:#fff;}
 .mbtn-save{background:var(--brand);color:#fff;}
 .mbtn-ok{background:var(--olive);color:#fff;}
+
+/* ── 예약 동의 안내 ── */
+.agree-notice{background:#FFF8E1;border:1px solid #FFD54F;border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:#7A5800;line-height:1.7;margin:14px 0;}
+.agree-check-row{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;font-weight:600;cursor:pointer;padding:4px 0;}
+.agree-check-row input[type=checkbox]{width:18px;height:18px;margin-top:1px;flex-shrink:0;accent-color:var(--brand);}
 
 /* ── 토스트 ── */
 .toast{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C2B3A;color:#fff;padding:12px 24px;border-radius:99px;font-size:13px;font-weight:600;z-index:100000;box-shadow:var(--shadow-md);white-space:nowrap;max-width:90vw;text-align:center;}
@@ -311,15 +330,6 @@ select.field-input{cursor:pointer;}
 <!-- 진입 게이트 -->
 <div id="auth-gate">
   <div class="gate-wrap">
-    <div class="gate-logo">
-      <div style="display:inline-flex;align-items:center;gap:10px;">
-        <div class="gate-logo-icon"><i class="ti ti-leaf"></i></div>
-        <div class="gate-logo-text">
-          <div class="brand">올리브베러 광화문점</div>
-          <div class="sub">크리에이터 방문 예약 시스템</div>
-        </div>
-      </div>
-    </div>
     <div class="gate-card">
       <div class="gate-header">
         <h1>올리브베러 광화문점<br>크리에이터 방문 예약 시스템</h1>
@@ -331,7 +341,7 @@ select.field-input{cursor:pointer;}
           크리에이터 방문 예약
         </button>
         <button class="gate-btn-admin" onclick="toggleAdminLogin()" style="justify-content:center;">
-          <i class="ti ti-settings" style="font-size:16px;"></i>
+          <i class="ti ti-settings" style="font-size:20px;"></i>
           담당자 예약 관리 창
           <i class="ti ti-chevron-down" style="font-size:14px;display:none;" id="admin-toggle-icon"></i>
         </button>
@@ -376,6 +386,9 @@ select.field-input{cursor:pointer;}
     </button>
     <button class="tab" id="tab-admin" onclick="sw('admin')" style="display:none;justify-content:center;align-items:center;flex-direction:column;">
       <i class="ti ti-shield-lock"></i>관리자
+    </button>
+    <button class="tab" id="tab-log" onclick="sw('log')" style="display:none;justify-content:center;align-items:center;flex-direction:column;">
+      <i class="ti ti-history"></i>예약 로그
     </button>
   </div>
 
@@ -473,6 +486,26 @@ select.field-input{cursor:pointer;}
     </div>
   </div>
 
+  <!-- 예약 동의 확인 (마지막 단계) -->
+  <div class="modal-overlay" id="agree-modal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title"><i class="ti ti-clipboard-check"></i>예약 내용 확인</div>
+      <div id="agree-modal-body"></div>
+      <div class="agree-notice">
+        매장 보안 방침, 개인정보보호법, 광고심의 기준에 따른 안내 사항을 준수하는데 동의합니다. 가이드라인을 지키지 않아 발생하는 모든 문제의 책임은 예약자 본인에게 있으며, 브랜드사 및 담당자는 이에 대해 책임지지 않습니다.
+      </div>
+      <label class="agree-check-row">
+        <input type="checkbox" id="agree-checkbox" onchange="toggleAgreeBtn()">
+        <span>위 안내 사항을 확인했으며 이에 동의합니다.</span>
+      </label>
+      <div class="modal-btns">
+        <button class="mbtn mbtn-cancel" onclick="closeModal('agree-modal')">취소</button>
+        <button class="mbtn mbtn-ok" id="agree-submit-btn" disabled onclick="confirmAgreeAndSubmit()">동의하고 예약 완료</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ══ PANEL: 예약 신청 ══ -->
   <div id="panel-book" class="panel active">
 
@@ -480,7 +513,7 @@ select.field-input{cursor:pointer;}
       <div class="notice-banner-icon">📌</div>
       <div class="notice-banner-text">
         <strong>예약 변경 안내</strong>
-        예약 변경은 첫 예약 후 24시간 이내 1회에 한해 신청 가능합니다.<br>예약 변경 시 기존 예약은 자동 취소됩니다.
+        예약 변경은 첫 예약 후 24시간 이내 1회에 한해 신청 가능합니다.<br>예약 변경 시 기존 예약은 자동 취소됩니다.<br>예약은 방문일 기준 D-5일 이전까지만 신청 가능하며, 방문일 기준 D-5일 전부터 방문 당일까지는 예약 변경 및 취소가 제한되며 담당자를 통해서만 가능합니다.
       </div>
     </div>
 
@@ -507,6 +540,7 @@ select.field-input{cursor:pointer;}
         <ul>
           <li>•<strong>월~금:</strong> 15:00, 16:00, 20:30, 21:30</li>
           <li>•<strong>일요일:</strong> 09:30, 10:30, 20:30, 21:30</li>
+          <li>•예약은 방문 희망일 기준 <strong>D-5일 이전</strong>까지만 신청 가능합니다</li>
           <li>•이용 시간: 슬롯당 최대 50분 이용 가능 (바 정비시간 포함 총 60분)</li>
           <li>•슬롯당 최대 한 팀만 예약 및 촬영 가능합니다</li>
           <li>•촬영 시작 및 촬영 종료 시 매장 MD 확인 필수</li>
@@ -602,7 +636,7 @@ select.field-input{cursor:pointer;}
         <li>• 사전 예약 후 24시간 이내, 최대 1회에 한해 예약 변경이 가능합니다.</li>
         <li>• 예약 변경 시 기존 예약 내역은 자동 취소됩니다.</li>
         <li>• 사전 예약 없이 매장에 방문하실 경우 촬영이 제한될 수 있습니다.</li>
-        <li>• 방문일 기준 D-3 이후, 예약 취소 및 변경이 불가합니다.</li>
+        <li>• 방문일 기준 D-5일 전부터 방문 당일까지는 예약 취소 및 변경이 제한되며, 담당자를 통해서만 처리 가능합니다.</li>
         <li>• 문의: lily.bat@antuan.co.kr</li>
       </ul>
     </div>
@@ -613,6 +647,10 @@ select.field-input{cursor:pointer;}
 
     <div id="firebase-notice-admin" style="display:none;background:#FFF3CD;border:1px solid #FFCA28;border-radius:var(--radius-md);padding:12px 14px;margin-bottom:16px;font-size:12px;color:#856404;line-height:1.6;">
       ⚠️ Firebase 미연결 상태 — 로컬 스토리지로 동작 중입니다. 다른 기기와 데이터가 공유되지 않습니다.
+    </div>
+
+    <div style="background:#F4F1EA;border:1px solid #E3DCC8;border-radius:var(--radius-md);padding:12px 14px;margin-bottom:16px;font-size:12px;color:#6B5B3D;line-height:1.7;">
+      📋 <strong>운영 체크리스트</strong> — 크리에이터 셀프 예약은 D-5일 이전까지만 가능합니다. <strong>D-7~D-5 구간</strong>에 확정된 예약자 리스트는 Export 후 올리브영 담당자 및 매장에 공유해 주세요. D-5일 이후 추가/변경/취소는 이 관리자 화면에서만 처리 가능하며, 모든 처리 내역은 <strong>'예약 로그'</strong> 탭에 자동 기록됩니다.
     </div>
 
     <!-- 통계 -->
@@ -682,6 +720,20 @@ select.field-input{cursor:pointer;}
     <div id="admin-booking-list"></div>
 
   </div>
+
+  <!-- ══ PANEL: 예약 로그 ══ -->
+  <div id="panel-log" class="panel">
+    <div class="admin-section-header">
+      <div class="admin-section-title"><i class="ti ti-history"></i>예약 변경 이력 로그</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="btn-sm btn-csv" onclick="exportLogsCSV()"><i class="ti ti-file-spreadsheet"></i>로그 Export</button>
+      </div>
+    </div>
+    <div style="background:#fafafa;border:1px solid #eee;border-radius:var(--radius-md);padding:12px 14px;margin-bottom:14px;font-size:12px;color:#888;line-height:1.6;">
+      <i class="ti ti-info-circle"></i> 예약 신청·변경·취소가 발생할 때마다 자동으로 기록됩니다. 크리에이터 간 "내가 먼저 예약했다" 분쟁 발생 시 타임스탬프 순서로 중재 근거로 활용하세요.
+    </div>
+    <div id="log-list"></div>
+  </div>
 </div>
 
 <script type="module">
@@ -729,6 +781,10 @@ let db = null;
 let useFirebase = false;
 let bookings = {}; // { "YYYY-MM-DD": [{t, account, name, phone, party, bookedAt, changed}] }
 let blockedDates = {}; // { "YYYY-MM-DD": true }
+let bookingLogs = []; // [{ts, actor, action, message}] — 예약 관련 모든 변경 이력
+
+// 크리에이터 셀프 예약(신규/변경) 시 최소 리드타임 — 방문일 기준 D-5일 이내 불가
+const MIN_LEAD_DAYS = 5;
 
 const today = new Date();
 let calYear = today.getFullYear();
@@ -773,6 +829,16 @@ async function initFirebase() {
       refreshAll();
     });
 
+    // 예약 로그(변경 이력) 실시간 동기화
+    const logsRef = ref(db, 'bookingLogs');
+    onValue(logsRef, (snapshot) => {
+      const val = snapshot.val() || {};
+      bookingLogs = Object.keys(val).map(k => val[k]);
+      if (document.getElementById('panel-log') && document.getElementById('panel-log').classList.contains('active')) {
+        buildLogPanel();
+      }
+    });
+
     setDbStatus(true);
     hideLoading();
     console.log('[DB] Firebase 연결 성공');
@@ -792,11 +858,14 @@ function loadFromLocal() {
   try {
     const b = localStorage.getItem('olivebetter_bookings');
     const bl = localStorage.getItem('olivebetter_blocked');
+    const lg = localStorage.getItem('olivebetter_logs');
     bookings = b ? JSON.parse(b) : {};
     blockedDates = bl ? JSON.parse(bl) : {};
+    bookingLogs = lg ? JSON.parse(lg) : [];
   } catch(e) {
     bookings = {};
     blockedDates = {};
+    bookingLogs = [];
   }
 }
 
@@ -804,6 +873,7 @@ function saveToLocal() {
   try {
     localStorage.setItem('olivebetter_bookings', JSON.stringify(bookings));
     localStorage.setItem('olivebetter_blocked', JSON.stringify(blockedDates));
+    localStorage.setItem('olivebetter_logs', JSON.stringify(bookingLogs));
   } catch(e) {}
 }
 
@@ -903,6 +973,7 @@ window.enterAsCreator = function() {
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('main-app').style.display = 'block';
   document.getElementById('tab-admin').style.display = 'none';
+  document.getElementById('tab-log').style.display = 'none';
   document.getElementById('admin-badge').style.display = 'none';
   sw('book');
   buildCal();
@@ -936,6 +1007,7 @@ function enterAdmin() {
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('main-app').style.display = 'block';
   document.getElementById('tab-admin').style.display = 'flex';
+  document.getElementById('tab-log').style.display = 'flex';
   document.getElementById('admin-badge').style.display = 'inline-flex';
   sw('admin');
 }
@@ -944,12 +1016,96 @@ function enterAdmin() {
 // 탭 전환
 // ════════════════════════════════════════════════
 window.sw = function(tab) {
-  ['book','my','admin'].forEach(p => {
+  ['book','my','admin','log'].forEach(p => {
     document.getElementById('tab-' + p) && (document.getElementById('tab-' + p).classList.toggle('active', p === tab));
     document.getElementById('panel-' + p) && document.getElementById('panel-' + p).classList.toggle('active', p === tab);
   });
   if (tab === 'admin') buildAdmin();
   if (tab === 'book') buildCal();
+  if (tab === 'log') buildLogPanel();
+};
+
+// ════════════════════════════════════════════════
+// 예약 변경 이력 로그
+//
+// 모든 예약 신청/변경/취소(크리에이터·관리자 양쪽)는
+// addLog()를 통해 타임스탬프와 함께 기록되어
+// "내가 먼저 예약했다" 식의 분쟁 발생 시 시간 순서로 중재 근거가 된다.
+// ════════════════════════════════════════════════
+function fmtLogTs(ts) {
+  const d = new Date(ts);
+  const yy = String(d.getFullYear()).slice(2);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mi = String(d.getMinutes()).padStart(2, '0');
+  const ss = String(d.getSeconds()).padStart(2, '0');
+  return `${yy}/${mm}/${dd} ${hh}:${mi}:${ss}`;
+}
+
+async function addLog(action, message, actor) {
+  const entry = {
+    ts: Date.now(),
+    actor: actor || (isAdmin ? '관리자' : '크리에이터'),
+    action, // 'create' | 'change' | 'cancel'
+    message
+  };
+  if (useFirebase && window._fb) {
+    const { ref, set } = window._fb;
+    const key = `${entry.ts}_${Math.random().toString(36).slice(2, 8)}`;
+    await set(ref(window._fb.db, `bookingLogs/${key}`), entry);
+    // onValue 리스너가 bookingLogs를 갱신함
+  } else {
+    bookingLogs.push(entry);
+    saveToLocal();
+    if (document.getElementById('panel-log') && document.getElementById('panel-log').classList.contains('active')) {
+      buildLogPanel();
+    }
+  }
+}
+
+function buildLogPanel() {
+  const wrap = document.getElementById('log-list');
+  if (!wrap) return;
+  const sorted = [...bookingLogs].sort((a, b) => b.ts - a.ts); // 최신순
+  if (sorted.length === 0) {
+    wrap.innerHTML = '<div style="text-align:center;padding:24px;color:#bbb;font-size:13px;">기록된 로그가 없습니다.</div>';
+    return;
+  }
+  let html = '';
+  sorted.forEach(l => {
+    const badgeCls = l.action === 'cancel' ? 'log-badge-cancel' : (l.action === 'change' ? 'log-badge-change' : 'log-badge-create');
+    const badgeTxt = l.action === 'cancel' ? '취소' : (l.action === 'change' ? '변경' : '신청/추가');
+    html += `<div class="log-row">
+      <div class="log-ts">${fmtLogTs(l.ts)}</div>
+      <div class="log-body">
+        <span class="log-badge ${badgeCls}">${badgeTxt}</span>
+        <span class="log-actor">[${l.actor}]</span>
+        <span class="log-msg">${l.message}</span>
+      </div>
+    </div>`;
+  });
+  wrap.innerHTML = html;
+}
+
+window.exportLogsCSV = function() {
+  let csv = '\uFEFF타임스탬프,행위자,구분,내용\n';
+  const sorted = [...bookingLogs].sort((a, b) => a.ts - b.ts);
+  const esc = v => `"${(v || '').toString().replace(/"/g, '""')}"`;
+  sorted.forEach(l => {
+    const badgeTxt = l.action === 'cancel' ? '취소' : (l.action === 'change' ? '변경' : '신청/추가');
+    csv += `${esc(fmtLogTs(l.ts))},${esc(l.actor)},${esc(badgeTxt)},${esc(l.message)}\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `올리브베러_예약로그_${dk(today.getFullYear(),today.getMonth(),today.getDate())}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('로그 CSV가 다운로드되었습니다.');
 };
 
 // ════════════════════════════════════════════════
@@ -963,6 +1119,48 @@ function getTaken(dkey) {
 }
 function getBooking(dkey, t) {
   return (bookings[dkey] || []).find(b => b.t === t);
+}
+
+// ── 방문일/취소·변경 제한 관련 날짜 유틸 ──
+function dateKeyOf(dateObj) {
+  return dk(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+}
+function daysBetweenKeys(keyLater, keyEarlier) {
+  const a = new Date(keyLater + 'T00:00:00Z').getTime();
+  const b = new Date(keyEarlier + 'T00:00:00Z').getTime();
+  return Math.round((a - b) / 86400000);
+}
+
+// ════════════════════════════════════════════════
+// 크리에이터 셀프 변경 가능 여부 판정
+//
+// 규칙 (2026-06 개정: D-5 정책):
+// 1) 이미 1회 변경을 사용했다면 (changed=true) → 불가
+// 2) 첫 예약 후 24시간이 지났다면 → 불가
+// 3) 현재 시점이 방문일 기준 D-5일 전 이내로 진입했다면 → 불가
+//    (방문일 D-5 ~ 방문 당일 구간은 셀프 변경/취소 잠금 → 관리자/마스터만 가능)
+//
+// ※ 과거에 존재했던 "예약 시점에 이미 D-3 이내로 임박했던 긴급 예약은
+//   24시간 내 1회 변경 가능"이라는 예외는 폐지되었다.
+//   신규 예약 자체가 D-5 이내 날짜로는 생성될 수 없으므로
+//   (buildCal/getDateOptions에서 원천 차단) 더 이상 발생할 수 없는 케이스다.
+// ════════════════════════════════════════════════
+function getChangeEligibility(dkey, booking, now) {
+  if (booking.changed) {
+    return { canChange: false, reason: 'changed' };
+  }
+  const bookedAt = booking.bookedAt || 0;
+  if (now - bookedAt >= 24 * 60 * 60 * 1000) {
+    return { canChange: false, reason: 'expired' };
+  }
+
+  const todayKey = dateKeyOf(new Date(now));
+  const daysUntilVisitNow = daysBetweenKeys(dkey, todayKey);
+  if (daysUntilVisitNow <= MIN_LEAD_DAYS) {
+    return { canChange: false, reason: 'locked' }; // D-5 진입 → 셀프 변경/취소 잠금
+  }
+
+  return { canChange: true, reason: 'ok' };
 }
 
 // ════════════════════════════════════════════════
@@ -982,6 +1180,12 @@ function buildCal() {
   const days = new Date(calYear, calMonth + 1, 0).getDate();
   const todayKey = dk(today.getFullYear(), today.getMonth(), today.getDate());
 
+  // 크리에이터 셀프 예약은 방문일 기준 D-5일 이내로는 신청 불가
+  // (오늘부터 D-5일째 되는 날까지는 선택 자체를 막는다 → minBookableKey 이후만 선택 가능)
+  const minBookableDate = new Date(today);
+  minBookableDate.setDate(today.getDate() + MIN_LEAD_DAYS);
+  const minBookableKey = dk(minBookableDate.getFullYear(), minBookableDate.getMonth(), minBookableDate.getDate());
+
   for (let i = 0; i < first; i++) g.innerHTML += '<div class="cal-day empty"></div>';
 
   for (let d = 1; d <= days; d++) {
@@ -989,6 +1193,7 @@ function buildCal() {
     const dow = new Date(calYear, calMonth, d).getDay();
     const slots = AVAIL[dow] || [];
     const isPast = dkey < todayKey;
+    const isLeadBlocked = !isPast && dkey <= minBookableKey; // D-5 이내(오늘 포함)
     const isBlocked = blockedDates[dkey];
     const isSelected = selDate === dkey;
 
@@ -1004,6 +1209,11 @@ function buildCal() {
 
     if (isPast) {
       g.innerHTML += `<div class="cal-day dis past"><div class="dn">${d}</div></div>`;
+      continue;
+    }
+
+    if (isLeadBlocked) {
+      g.innerHTML += `<div class="cal-day dis leadblock"><div class="dn">${d}</div><div class="dc">예약마감</div></div>`;
       continue;
     }
 
@@ -1084,15 +1294,22 @@ function checkDuplicate(acc, ignoreDkey = '', ignoreTime = '') {
 }
 
 // ════════════════════════════════════════════════
-// 예약 제출
+// 예약 제출 — 1단계: 입력값 검증 후 동의 팝업 오픈
 // ════════════════════════════════════════════════
-window.submitForm = async function() {
+window.submitForm = function() {
   const acc = document.getElementById('f-account').value.trim();
   const nm = document.getElementById('f-name').value.trim();
   const ph = document.getElementById('f-phone').value.trim();
 
   if (!acc || !nm || !ph) { showToast('필수 항목을 모두 입력해 주세요.'); return; }
   if (!selDate || !selTime) { showToast('날짜와 시간을 선택해 주세요.'); return; }
+
+  // 방어 검증: 방문일 기준 D-5일 이내 날짜는 셀프 예약 불가
+  const todayKeyChk = dateKeyOf(new Date());
+  if (daysBetweenKeys(selDate, todayKeyChk) <= MIN_LEAD_DAYS) {
+    showToast(`방문일 기준 D-${MIN_LEAD_DAYS}일 이내는 예약이 마감되었습니다. 담당자에게 문의해 주세요.`);
+    return;
+  }
 
   if (checkDuplicate(acc)) {
     showToast('이미 예약된 계정입니다. (중복 예약 불가)');
@@ -1101,6 +1318,66 @@ window.submitForm = async function() {
 
   if (getTaken(selDate).includes(selTime)) {
     showToast('방금 다른 분이 예약했습니다. 다른 시간을 선택해 주세요.');
+    buildSlots(new Date(selDate).getDay(), selDate);
+    goStep(2);
+    return;
+  }
+
+  // 검증 통과 → 예약 내용 확인 + 안내사항 동의 팝업 표시
+  const dateParts = selDate.split('-');
+  document.getElementById('agree-modal-body').innerHTML = `
+    <div class="modal-info-row"><span class="mir-k">방문 일자</span><span class="mir-v">${dateParts[0]}년 ${parseInt(dateParts[1])}월 ${parseInt(dateParts[2])}일</span></div>
+    <div class="modal-info-row"><span class="mir-k">방문 시간</span><span class="mir-v">${selTime}</span></div>
+    <div class="modal-info-row"><span class="mir-k">인스타그램</span><span class="mir-v">${acc}</span></div>
+    <div class="modal-info-row"><span class="mir-k">이름</span><span class="mir-v">${nm}</span></div>
+    <div class="modal-info-row"><span class="mir-k">연락처</span><span class="mir-v">${ph}</span></div>
+    <div class="modal-info-row"><span class="mir-k">동행 인원</span><span class="mir-v">${document.getElementById('f-party').value}</span></div>
+  `;
+  document.getElementById('agree-checkbox').checked = false;
+  document.getElementById('agree-submit-btn').disabled = true;
+  openModal('agree-modal');
+};
+
+window.toggleAgreeBtn = function() {
+  const cb = document.getElementById('agree-checkbox');
+  document.getElementById('agree-submit-btn').disabled = !cb.checked;
+};
+
+// ════════════════════════════════════════════════
+// 예약 제출 — 2단계: 동의 후 실제 예약 생성
+// ════════════════════════════════════════════════
+window.confirmAgreeAndSubmit = async function() {
+  const cb = document.getElementById('agree-checkbox');
+  if (!cb.checked) { showToast('안내 사항에 동의해 주세요.'); return; }
+
+  const acc = document.getElementById('f-account').value.trim();
+  const nm = document.getElementById('f-name').value.trim();
+  const ph = document.getElementById('f-phone').value.trim();
+
+  if (!acc || !nm || !ph || !selDate || !selTime) {
+    showToast('예약 정보가 유효하지 않습니다. 다시 시도해 주세요.');
+    closeModal('agree-modal');
+    return;
+  }
+
+  // 모달이 떠있는 사이 D-5 경계를 넘겼을 가능성 재검증
+  const todayKeyChk2 = dateKeyOf(new Date());
+  if (daysBetweenKeys(selDate, todayKeyChk2) <= MIN_LEAD_DAYS) {
+    showToast(`방문일 기준 D-${MIN_LEAD_DAYS}일 이내는 예약이 마감되었습니다. 담당자에게 문의해 주세요.`);
+    closeModal('agree-modal');
+    buildCal();
+    return;
+  }
+
+  // 모달이 떠있는 사이 다른 사람이 선점했을 가능성 재확인
+  if (checkDuplicate(acc)) {
+    showToast('이미 예약된 계정입니다. (중복 예약 불가)');
+    closeModal('agree-modal');
+    return;
+  }
+  if (getTaken(selDate).includes(selTime)) {
+    showToast('방금 다른 분이 예약했습니다. 다른 시간을 선택해 주세요.');
+    closeModal('agree-modal');
     buildSlots(new Date(selDate).getDay(), selDate);
     goStep(2);
     return;
@@ -1127,6 +1404,11 @@ window.submitForm = async function() {
     saveToLocal();
     buildCal();
   }
+
+  const dateParts0 = selDate.split('-');
+  addLog('create', `크리에이터 ${acc}님이 ${parseInt(dateParts0[1])}월 ${parseInt(dateParts0[2])}일 ${selTime}로 예약을 신청했습니다.`, '크리에이터');
+
+  closeModal('agree-modal');
 
   // 완료 화면
   const dateParts = selDate.split('-');
@@ -1178,20 +1460,22 @@ window.lookupBooking = function() {
   }
 
   const now = Date.now();
-  const bookedAt = found.bookedAt || 0;
-  const canChange = !found.changed && (now - bookedAt < 24 * 60 * 60 * 1000);
-  const remainMs = 24 * 60 * 60 * 1000 - (now - bookedAt);
-  const remainH = Math.floor(remainMs / 3600000);
-  const remainM = Math.floor((remainMs % 3600000) / 60000);
+  const elig = getChangeEligibility(foundDate, found, now);
   const dateParts = foundDate.split('-');
 
   let changeBtn = '';
   let changeInfo = '';
-  if (canChange) {
+  if (elig.canChange) {
+    const bookedAt = found.bookedAt || 0;
+    const remainMs = 24 * 60 * 60 * 1000 - (now - bookedAt);
+    const remainH = Math.floor(remainMs / 3600000);
+    const remainM = Math.floor((remainMs % 3600000) / 60000);
     changeBtn = `<button class="btn-primary brand-btn" style="flex:1;" onclick="openChangeModal('${foundDate}','${found.t}')"><i class="ti ti-calendar-event"></i>일정 변경</button>`;
     changeInfo = `<div class="change-countdown">⏱ 변경 가능 시간: ${remainH}시간 ${remainM}분 남음</div>`;
-  } else if (found.changed) {
+  } else if (elig.reason === 'changed') {
     changeInfo = `<div class="change-expired">이미 1회 변경이 완료된 예약입니다.</div>`;
+  } else if (elig.reason === 'locked') {
+    changeInfo = `<div class="change-locked">방문일 기준 D-5일 전부터는 예약 변경 및 취소가 제한됩니다.<br>변경이 꼭 필요하신 경우 담당자(lily.bat@antuan.co.kr)에게 문의해 주세요.</div>`;
   } else {
     changeInfo = `<div class="change-expired">예약 후 24시간이 경과하여 변경이 불가합니다.</div>`;
   }
@@ -1223,8 +1507,8 @@ window.openChangeModal = function(dkey, t) {
   changeTarget = { dkey, t };
   changeSelTime = null;
 
-  // 날짜 옵션 (오늘 포함 30일)
-  const opts = getDateOptions(30);
+  // 날짜 옵션 (오늘 포함 30일, 단 방문일 기준 D-5일 이내는 셀프 변경 불가하므로 제외)
+  const opts = getDateOptions(30, MIN_LEAD_DAYS);
   document.getElementById('chg-day').innerHTML = opts;
   updateChangeTimeSlots();
   openModal('change-modal');
@@ -1265,8 +1549,29 @@ window.confirmChange = async function() {
   const newDkey = document.getElementById('chg-day').value;
   const { dkey: oldDkey, t: oldT } = changeTarget;
 
+  const oldBooking = getBooking(oldDkey, oldT);
+  if (!oldBooking) { showToast('기존 예약을 찾을 수 없습니다.'); return; }
+
+  // 변경 가능 여부 최종 재검증 (D-5 잠금 / 24시간 / 1회 제한)
+  const elig = getChangeEligibility(oldDkey, oldBooking, Date.now());
+  if (!elig.canChange) {
+    let msg = '변경 가능 조건을 충족하지 않습니다.';
+    if (elig.reason === 'locked') msg = `방문일 기준 D-${MIN_LEAD_DAYS}일 전부터는 셀프 변경이 불가합니다. 담당자에게 문의해 주세요.`;
+    else if (elig.reason === 'changed') msg = '이미 1회 변경을 사용한 예약입니다.';
+    else if (elig.reason === 'expired') msg = '예약 후 24시간이 경과하여 변경이 불가합니다.';
+    showToast(msg);
+    closeModal('change-modal');
+    return;
+  }
+
   if (newDkey === oldDkey && changeSelTime === oldT) {
     showToast('현재 예약과 동일한 일정입니다.'); return;
+  }
+  // 새로 선택한 날짜도 D-5 이내면 변경 불가 (방어 검증)
+  const todayKeyChk3 = dateKeyOf(new Date());
+  if (daysBetweenKeys(newDkey, todayKeyChk3) <= MIN_LEAD_DAYS) {
+    showToast(`방문일 기준 D-${MIN_LEAD_DAYS}일 이내 날짜로는 변경할 수 없습니다.`);
+    return;
   }
   if (blockedDates[newDkey]) {
     showToast('선택한 날짜는 예약이 차단되어 있습니다.'); return;
@@ -1274,9 +1579,6 @@ window.confirmChange = async function() {
   if (getTaken(newDkey).includes(changeSelTime)) {
     showToast('해당 슬롯은 이미 예약되어 있습니다.'); return;
   }
-
-  const oldBooking = getBooking(oldDkey, oldT);
-  if (!oldBooking) { showToast('기존 예약을 찾을 수 없습니다.'); return; }
 
   const updatedBooking = { ...oldBooking, t: changeSelTime, changed: true };
 
@@ -1293,6 +1595,9 @@ window.confirmChange = async function() {
     saveToLocal();
     buildCal();
   }
+
+  const op = oldDkey.split('-'), np = newDkey.split('-');
+  addLog('change', `크리에이터 ${oldBooking.account}님이 예약을 ${op[1]}/${op[2]} ${oldT} → ${np[1]}/${np[2]} ${changeSelTime}로 변경했습니다.`, '크리에이터');
 
   closeModal('change-modal');
   showToast('예약이 변경되었습니다!');
@@ -1484,12 +1789,13 @@ function populateEditDropdowns() {
   document.getElementById('em-time').innerHTML = timeOpts;
 }
 
-function getDateOptions(days) {
+function getDateOptions(days, minLeadDays = 0) {
   let html = '';
   for (let i = 0; i < days; i++) {
     const d = new Date(today);
     d.setDate(today.getDate() + i);
     if (d.getDay() === 6) continue; // 토요일 제외
+    if (minLeadDays > 0 && i <= minLeadDays) continue; // 셀프 변경: D-5 이내(오늘 포함) 날짜는 옵션에서 제외
     const dkey = dk(d.getFullYear(), d.getMonth(), d.getDate());
     const dows = ['일','월','화','수','목','금'];
     const dowLabel = dows[d.getDay() === 0 ? 0 : d.getDay()];
@@ -1558,7 +1864,7 @@ window.openDelFromInfo = function() {
 };
 
 window.confirmDelete = async function() {
-  const { dkey, t } = targetEditInfo;
+  const { dkey, t, bk } = targetEditInfo;
   const newList = (bookings[dkey] || []).filter(b => b.t !== t);
 
   if (useFirebase && window._fb) {
@@ -1570,6 +1876,8 @@ window.confirmDelete = async function() {
     buildAdmin();
     buildCal();
   }
+  const dp = dkey.split('-');
+  addLog('cancel', `관리자가 ${bk.account}님의 ${dp[1]}/${dp[2]} ${t} 예약을 취소했습니다.`, '관리자');
   closeModal('del-modal');
   showToast('예약이 취소 처리되었습니다.');
 };
@@ -1636,6 +1944,10 @@ window.confirmEditBooking = async function() {
       saveToLocal();
       buildAdmin(); buildCal();
     }
+    {
+      const np = newDkey.split('-');
+      addLog('create', `관리자가 ${newAcc || '(계정 미입력)'}님의 예약을 ${np[1]}/${np[2]} ${newT}로 수기 추가했습니다.`, '관리자');
+    }
     showToast('예약이 추가되었습니다.');
 
   } else {
@@ -1662,6 +1974,10 @@ window.confirmEditBooking = async function() {
       bookings[newDkey].push(updatedBooking);
       saveToLocal();
       buildAdmin(); buildCal();
+    }
+    {
+      const op = oldDkey.split('-'), np = newDkey.split('-');
+      addLog('change', `관리자가 ${newAcc || targetEditInfo.bk.account}님의 예약을 ${op[1]}/${op[2]} ${oldT} → ${np[1]}/${np[2]} ${newT}로 변경했습니다.`, '관리자');
     }
     showToast('예약 정보가 수정되었습니다.');
   }
